@@ -19,6 +19,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.server.MinecraftServer;
@@ -107,6 +109,14 @@ public class EntityActions {
             (data, entity) -> {
                 if(entity instanceof LivingEntity) {
                     ((LivingEntity)entity).heal(data.getFloat("amount"));
+                }
+            }));
+        register(new ActionFactory<>(Origins.identifier("sound"), new SerializableData()
+            .add("sound", SerializableDataType.SOUND),
+            (data, entity) -> {
+                if(entity instanceof LivingEntity) {
+                    player.world.playSound((PlayerEntity) null, player.getX(), player.getY(), player.getZ(), new SoundEvent(new Identifier("minecraft", data.get("sound"))), 
+            		SoundCategory.PLAYERS, 1F, 1F);
                 }
             }));
         register(new ActionFactory<>(Origins.identifier("exhaust"), new SerializableData()
